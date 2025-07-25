@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire Configuration Portail Captif WiFi - Jenysas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Basic styles for the form - you can move this to style.css */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header h1 {
+            color: #0056b3;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .header h2 {
+            color: #007bff;
+            font-size: 1.8em;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .header .subtitle {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .intro {
+            background-color: #e9f7ff;
+            border-left: 5px solid #007bff;
+            padding: 15px 20px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .intro p {
+            margin-bottom: 10px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin-top: 15px;
+        }
+
+        .checklist li {
+            padding-left: 25px;
+            position: relative;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .checklist li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border: 2px solid #007bff;
+            border-radius: 3px;
+        }
+
+        .form-section {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            color: #007bff;
+            font-size: 1.6em;
+            margin-top: 0;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .section-number {
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group input[type="tel"],
+        .form-group input[type="email"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            width: calc(100% - 22px); /* Adjust for padding and border */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        .form-group textarea {
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 60px;
+        }
+
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px 25px; /* Row-gap, column-gap */
+            margin-top: 10px;
+        }
+
+        .checkbox-group label, .radio-group label {
+            font-weight: normal;
+            margin-bottom: 0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"], .radio-group input[type="radio"] {
+            margin-right: 8px;
+            /* Customize checkbox/radio appearance */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #007bff;
+            border-radius: 3px;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            top: 1px;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .radio-group input[type="radio"] {
+            border-radius: 50%; /* Make radios round */
+        }
+
+        .checkbox-group input[type="checkbox"]:checked,
+        .radio-group input[type="radio"]:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::after {
+            content: '✔';
+            color: white;
+            font-size: 12px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .radio-group input[type="radio"]:checked::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+
+        /* Dynamic fields styles */
+        .forfait-item, .service-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px dashed #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .forfait-item label, .service-item label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+
+        .forfait-item input[type="text"],
+        .forfait-item input[type="number"],
+        .service-item input[type="text"],
+        .service-item textarea {
+            width: auto; /* Override 100% width for grid */
+            flex-grow: 1;
+        }
+        
+        .social-links label {
+            display: inline-block;
+            width: 80px; /* Align labels */
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .social-links input {
+            width: calc(100% - 100px); /* Adjust width */
+            margin-bottom: 10px;
+        }
+
+        .add-item-btn {
+            background-color: #17a2b8; /* A nice teal/cyan color */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+            display: inline-block;
+        }
+
+        .add-item-btn:hover {
+            background-color: #138496;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 40px;
+            display: flex; /* Use flexbox to align buttons */
+            justify-content: center; /* Center buttons */
+            gap: 20px; /* Space between buttons */
+        }
+
+        .submit-btn, .preview-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+        }
+        .preview-btn {
+            background-color: #6c757d; /* Grey color for preview */
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.2);
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+        }
+        .preview-btn:hover {
+            background-color: #5a6268;
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+        }
+
+
+        .footer-note {
+            margin-top: 25px;
+            font-size: 0.85em;
+            color: #888;
+            text-align: center;
+        }
+
+        /* Styling for required fields */
+        input:required:invalid, textarea:required:invalid {
+            border-color: #ff6b6b; /* Red border for invalid required fields */
+        }
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        /* Specific alignment for the "Autre" input next to radio/checkbox */
+        .checkbox-group input[type="text"],
+        .radio-group input[type="text"] {
+            width: 150px; /* Adjust width as needed */
+            margin-left: 10px; /* Space from the checkbox/radio */
+        }
+        #additional-pages-container input[type="text"] {
+            margin-bottom: 10px;
+        }
+        .integration-group label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: normal; /* Override strong for simple labels */
+        }
+        .integration-group input {
+            margin-bottom: 10px;
+        }
+
+        /* --- Modal Styles --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+            padding-top: 60px; /* Location of the box */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 5% from the top and centered */
+            padding: 30px;
+            border: 1px solid #888;
+            border-radius: 8px;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 700px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .modal-content h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-content h3 {
+            color: #0056b3;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .modal-content p {
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+        .modal-content ul {
+            margin-left: 20px;
+            padding-left: 0;
+        }
+        .modal-content li {
+            margin-bottom: 3px;
+        }
+        .modal-content .empty-field {
+            color: #888;
+            font-style: italic;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-actions {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .modal-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 0 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .modal-actions .edit-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .modal-actions .edit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .modal-actions .confirm-send-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .modal-actions .confirm-send-btn:hover {
+            background-color: #218838;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>QUESTIONNAIRE</h1>
+            <h2>Configuration Portail Captif WiFi</h2>
+            <p class="subtitle">Cahier des charges pour le développement de votre solution</p>
+            <div class="intro">
+                <p><strong>Cher client Jenysas,</strong></p>
+                <p>Ce questionnaire nous permettra de développer une solution de portail captif WiFi parfaitement adaptée à vos besoins et à votre image de marque.</p>
+                <p>Merci de remplir ce formulaire avec le plus de détails possible. Ces informations nous aideront à :</p>
+                <ul class="checklist">
+                    <li>☐ Personnaliser l'interface selon votre identité visuelle</li>
+                    <li>☐ Configurer les fonctionnalités adaptées à votre activité</li>
+                    <li>☐ Intégrer les systèmes de paiement et d'authentification souhaités</li>
+                    <li>☐ Développer les fonctionnalités marketing et analytiques dont vous avez besoin</li>
+                </ul>
+            </div>
+        </header>
+
+        <form id="questionnaire-form" action="{{ url_for('submit_form') }}" method="POST">
+            <section class="form-section">
+                <h3 class="section-title">
+                    <span class="section-number">1</span>
+                    INFORMATIONS ENTREPRISE
+                </h3>
+                
+                <div class="form-group">
+                    <label for="nom_entreprise">Nom de l'entreprise :</label>
+                    <input type="text" id="nom_entreprise" name="nom_entreprise" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="logo_format">Logo (format souhaité) :</label>
+                    <input type="text" id="logo_format" name="logo_format" placeholder="Ex: PNG, SVG, JPG">
+                </div>
+
+                <div class="form-group">
+                    <label for="slogan">Slogan ou message d'accueil :</label>
+                    <textarea id="slogan" name="slogan" rows="2"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="site_web">Site web :</label>
+                    <input type="url" id="site_web" name="site_web" placeholder="https://example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="couleurs_marque">Couleurs de marque (codes HEX) :</label>
+                    <input type="text" id="couleurs_marque" name="couleurs_marque" placeholder="Ex: #FF0000, #00FF00">
+                </div>
+
+                <div class="form-group">
+                    <label for="telephone_support">Téléphone support client :</label>
+                    <input type="tel" id="telephone_support" name="telephone_support">
+                </div>
+
+                <div class="form-group">
+                    <label for="email_contact">Email de contact :</label>
+                    <input type="email" id="email_contact" name="email_contact" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="adresse">Adresse complète :</label>
+                    <textarea id="adresse" name="adresse" rows="3"></textarea>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h3 class="section-title">
+                    <span class="section-number">2</span>
+                    CONFIGURATION WIFI & ACCÈS
+                </h3>
+
+                <div class="form-group">
+                    <label>Durée de session par défaut :</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="duree_session" value="30min"> 30 minutes</label>
+                        <label><input type="radio" name="duree_session" value="1h"> 1 heure</label>
+                        <label><input type="radio" name="duree_session" value="2h"> 2 heures</label>
+                        <label><input type="radio" name="duree_session" value="4h"> 4 heures</label>
+                        <label><input type="radio" name="duree_session" value="1j"> 1 journée</label>
+                        <label><input type="radio" name="duree_session" value="illimitee"> Illimitée</label>
+                        <label><input type="radio" name="duree_session" value="autre" id="duree_session_autre_radio"> Autre :</label>
+                        <input type="text" name="duree_session_autre" id="duree_session_autre_input" placeholder="Spécifiez" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Modes d'authentification :</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="modes_auth" value="gratuit"> Gratuit (simple clic)</label>
+                        <label><input type="checkbox" name="modes_auth" value="sms"> SMS (vérification téléphone)</label>
+                        <label><input type="checkbox" name="modes_auth" value="email"> Email (validation par email)</label>
+                        <label><input type="checkbox" name="modes_auth" value="kkiapay"> Paiement Kkiapay</label>
+                        <label><input type="checkbox" name="modes_auth" value="reseaux_sociaux"> Réseaux sociaux (Facebook/Google)</label>
+                        <label><input type="checkbox" name="modes_auth" value="autre_mode_auth" id="autre_mode_auth_checkbox"> Autre :</label>
+                        <input type="text" name="modes_auth_autre_input" id="modes_auth_autre_input" placeholder="Spécifiez d'autres modes" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bande_passante">Bande passante par utilisateur :</label>
+                    <input type="text" id="bande_passante" name="bande_passante" placeholder="Ex: 10 Mbps">
+                </div>
+
+                <div class="form-group">
+                    <label for="horaires_activation">Horaires d'activation :</label>
+                    <input type="text" id="horaires_activation" name="horaires_activation" placeholder="Ex: 8h-22h">
+                </div>
+
+                <div class="form-group">
+                    <label for="message_accueil">Message d'accueil personnalisé :</label>
+                    <textarea id="message_accueil" name="message_accueil" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="nb_max_utilisateurs">Nb max d'utilisateurs simultanés :</label>
+                    <input type="number" id="nb_max_utilisateurs" name="nb_max_utilisateurs">
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h3 class="section-title">
+                    <span class="section-number">3</span>
+                    INTÉGRATION PAIEMENT KKIAPAY
+                </h3>
+
+                <div class="form-group">
+                    <label for="cle_publique_kkiapay">Clé publique Kkiapay :</label>
+                    <input type="text" id="cle_publique_kkiapay" name="cle_publique_kkiapay">
+                </div>
+                <div class="form-group">
+                    <label for="cle_privee_kkiapay">Clé privée Kkiapay :</label>
+                    <input type="text" id="cle_privee_kkiapay" name="cle_privee_kkiapay">
+                </div>
+                <div class="form-group">
+                    <label for="cle_secrete_kkiapay">Clé secrète Kkiapay :</label>
+                    <input type="text" id="cle_secrete_kkiapay" name="cle_secrete_kkiapay">
+                </div>
+                <div class="form-group">
+                    <label for="kkiapay_identifiants_compte">Ou identifiants du compte Kkiapay (si pas de clés) :</label>
+                    <input type="text" id="kkiapay_identifiants_compte" name="kkiapay_identifiants_compte" placeholder="Email ou autre identifiant de compte">
+                </div>
+
+                <div class="form-group">
+                    <label>Devise utilisée :</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="devise" value="XOF"> XOF (FCFA)</label>
+                        <label><input type="radio" name="devise" value="autre" id="devise_autre_radio"> Autre :</label>
+                        <input type="text" name="devise_autre" id="devise_autre_input" placeholder="Spécifiez" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gestion des échecs de paiement :</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="gestion_echecs" value="reessai"> Tentative de réessai automatique</label>
+                        <label><input type="checkbox" name="gestion_echecs" value="notification"> Notification administrateur</label>
+                        <label><input type="checkbox" name="gestion_echecs" value="redirection"> Redirection vers aide/contact</label>
+                        </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="webhook_url">URL de Webhook (HTTPS obligatoire) :</label>
+                    <input type="url" id="webhook_url" name="webhook_url" pattern="https://.*">
+                </div>
+
+                <div class="form-group">
+                    <label>Forfaits WiFi payants proposés :</label>
+                    <div class="forfait-group" id="forfait-group-container">
+                        <div class="forfait-item">
+                            <label>1. Nom :</label>
+                            <input type="text" name="forfait_nom_1">
+                            <label>Prix :</label>
+                            <input type="number" name="forfait_prix_1"> FCFA
+                        </div>
+                        <div class="forfait-item">
+                            <label>2. Nom :</label>
+                            <input type="text" name="forfait_nom_2">
+                            <label>Prix :</label>
+                            <input type="number" name="forfait_prix_2"> FCFA
+                        </div>
+                        <div class="forfait-item">
+                            <label>3. Nom :</label>
+                            <input type="text" name="forfait_nom_3">
+                            <label>Prix :</label>
+                            <input type="number" name="forfait_prix_3"> FCFA
+                        </div>
+                    </div>
+                    <button type="button" id="addForfaitBtn" class="add-item-btn">Ajouter un autre forfait</button>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h3 class="section-title">
+                    <span class="section-number">4</span>
+                    CONTENU & PRÉSENCE DIGITALE
+                </h3>
+
+                <div class="form-group">
+                    <label>Pages additionnelles :</label>
+                    <div id="additional-pages-container">
+                        <input type="text" name="page_url_1" placeholder="1. Nom de la page ou URL">
+                        <input type="text" name="page_url_2" placeholder="2. Nom de la page ou URL">
+                        <input type="text" name="page_url_3" placeholder="3. Nom de la page ou URL">
+                    </div>
+                    <button type="button" id="addPageBtn" class="add-item-btn">Ajouter une autre page</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Contenu multimédia :</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="contenu_multimedia" value="galerie"> Galerie photos</label>
+                        <label><input type="checkbox" name="contenu_multimedia" value="videos"> Vidéos de présentation</label>
+                        <label><input type="checkbox" name="contenu_multimedia" value="testimonials"> Témoignages clients</label>
+                        <label><input type="checkbox" name="contenu_multimedia" value="catalogue"> Catalogue/Menu PDF</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Liens réseaux sociaux :</label>
+                    <div class="social-links">
+                        <label>Facebook :</label>
+                        <input type="url" name="facebook">
+                        <label>Instagram :</label>
+                        <input type="url" name="instagram">
+                        <label>LinkedIn :</label>
+                        <input type="url" name="linkedin">
+                        <label>TikTok :</label>
+                        <input type="url" name="tiktok">
+                        <label>YouTube :</label>
+                        <input type="url" name="youtube">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Flux à afficher :</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="flux_afficher" value="facebook_posts"> Derniers posts Facebook</label>
+                        <label><input type="checkbox" name="flux_afficher" value="instagram_photos"> Photos Instagram</label>
+                        <label><input type="checkbox" name="flux_afficher" value="youtube_videos"> Vidéos YouTube</label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h3 class="section-title">
+                    <span class="section-number">5</span>
+                    SERVICES & OFFRES COMMERCIALES
+                </h3>
+
+                <div class="form-group">
+                    <label>Principaux services/produits :</label>
+                    <div class="service-group" id="service-group-container">
+                        <div class="service-item">
+                            <label>1. Nom :</label>
+                            <input type="text" name="service_nom_1">
+                            <label>Description :</label>
+                            <textarea name="service_desc_1" rows="2"></textarea>
+                        </div>
+                        <div class="service-item">
+                            <label>2. Nom :</label>
+                            <input type="text" name="service_nom_2">
+                            <label>Description :</label>
+                            <textarea name="service_desc_2" rows="2"></textarea>
+                        </div>
+                        <div class="service-item">
+                            <label>3. Nom :</label>
+                            <input type="text" name="service_nom_3">
+                            <label>Description :</label>
+                            <textarea name="service_desc_3" rows="2"></textarea>
+                        </div>
+                    </div>
+                    <button type="button" id="addServiceBtn" class="add-item-btn">Ajouter un autre service</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Formulaires d'interaction :</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="formulaires_interaction" value="contact"> Contact direct</label>
+                        <label><input type="checkbox" name="formulaires_interaction" value="devis"> Demande de devis</label>
+                        <label><input type="checkbox" name="formulaires_interaction" value="newsletter"> Inscription newsletter</label>
+                        <label><input type="checkbox" name="formulaires_interaction" value="rdv"> Prise de rendez-vous</label>
+                        <label><input type="checkbox" name="formulaires_interaction" value="avis"> Recueil d'avis clients</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Photos professionnelles :</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="photos_pro" value="disponibles"> Oui, disponibles (haute qualité)</label>
+                        <label><input type="radio" name="photos_pro" value="retouche"> Oui, nécessitent retouche</label>
+                        <label><input type="radio" name="photos_pro" value="shooting"> Non, shooting nécessaire</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description_activite">Description de votre activité :</label>
+                    <textarea id="description_activite" name="description_activite" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="promotion_speciale">Promotion spéciale :</label>
+                    <textarea id="promotion_speciale" name="promotion_speciale" rows="3"></textarea>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h3 class="section-title">
+                    <span class="section-number">6</span>
+                    CONFIGURATION TECHNIQUE & ANALYTICS
+                </h3>
+
+                <div class="form-group">
+                    <label>Statistiques souhaitées :</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="statistiques" value="connexions"> Connexions journalières/mensuelles</label>
+                        <label><input type="checkbox" name="statistiques" value="revenus"> Revenus forfaits payants</label>
+                        <label><input type="checkbox" name="statistiques" value="durees"> Durées moyennes des sessions</label>
+                        <label><input type="checkbox" name="statistiques" value="pages"> Pages les plus visitées</label>
+                        <label><input type="checkbox" name="statistiques" value="demographie"> Démographie des utilisateurs</label>
+                        <label><input type="checkbox" name="statistiques" value="pics"> Pics d'affluence</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Support multilingue :</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="support_multilingue" value="francais"> Français uniquement</label>
+                        <label><input type="radio" name="support_multilingue" value="fr_en"> Français + Anglais</label>
+                        <label><input type="radio" name="support_multilingue" value="autre" id="support_multilingue_autre_radio"> Autre(s) :</label>
+                        <input type="text" name="autres_langues" id="autres_langues_input" placeholder="Spécifiez" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gestion des données :</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="gestion_donnees" value="rgpd"> Conformité RGPD</label>
+                        <label><input type="checkbox" name="gestion_donnees" value="anonymisees"> Données anonymisées</label>
+                        <label><input type="checkbox" name="gestion_donnees" value="conservation"> Conservation temporaire des logs</label>
+                        <label><input type="checkbox" name="gestion_donnees" value="marketing"> Intégration base marketing</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Niveau de support :</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="niveau_support" value="24_7"> Support 24h/24 - 7j/7</label>
+                        <label><input type="radio" name="niveau_support" value="heures_ouvrables"> Heures ouvrables</label>
+                        <label><input type="radio" name="niveau_support" value="email"> Email uniquement</label>
+                        <label><input type="radio" name="niveau_support" value="telephonique"> Téléphonique prioritaire</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Intégrations avec autres systèmes :</label>
+                    <div class="integration-group" id="integration-group-container">
+                        <label>CRM existant :</label>
+                        <input type="text" name="crm_existant">
+                        <label>Outil Email marketing :</label>
+                        <input type="text" name="outil_email_marketing">
+                        <label>Autre outil 1 :</label>
+                        <input type="text" name="autre_outil_1">
+                    </div>
+                    <button type="button" id="addIntegrationBtn" class="add-item-btn">Ajouter une autre intégration</button>
+                </div>
+            </section>
+
+            ---
+            <section class="form-section">
+                <h3 class="section-title">
+                    <span class="section-number">7</span>
+                    NOTES ADDITIONNELLES
+                </h3>
+                <div class="form-group">
+                    <label for="notes_additionnelles">Vous avez d'autres informations importantes, des besoins spécifiques non mentionnés ci-dessus, ou des commentaires à ajouter ? N'hésitez pas à les écrire ici :</label>
+                    <textarea id="notes_additionnelles" name="notes_additionnelles" rows="6" placeholder="Écrivez vos notes ici..."></textarea>
+                </div>
+            </section>
+            ---
+
+            <div class="submit-section">
+                <button type="button" class="preview-btn" id="previewBtn">Vérifier les données</button>
+                <button type="submit" class="submit-btn" id="submitFormBtn">Soumettre le questionnaire</button>
+            </div>
+            <p class="footer-note">Document de spécifications techniques - 2025</p>
+        </form>
+    </div>
+
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Récapitulatif de votre soumission</h2>
+            <div id="modal-body-content">
+                </div>
+            <div class="modal-actions">
+                <button class="edit-btn" id="editFormBtn">Modifier le formulaire</button>
+                <button class="confirm-send-btn" id="confirmSendBtn">Confirmer et Envoyer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- General Utility Functions ---
+        function getFormValues() {
+            const form = document.getElementById('questionnaire-form');
+            const formData = new FormData(form);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                // Handle multiple checkboxes with the same name
+                if (key.includes('[]') || (form.elements[key] && form.elements[key].type === 'checkbox' && document.querySelectorAll(`input[name="${key}"]`).length > 1)) {
+                    if (!data[key]) {
+                        data[key] = [];
+                    }
+                    data[key].push(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            // Special handling for "other" text inputs linked to radios/checkboxes
+            const dureeSessionRadio = document.querySelector('input[name="duree_session"]:checked');
+            if (dureeSessionRadio && dureeSessionRadio.value === 'autre') {
+                data['duree_session'] = data['duree_session_autre'] || 'Non spécifié';
+            } else if (dureeSessionRadio) {
+                data['duree_session'] = dureeSessionRadio.value;
+            } else {
+                data['duree_session'] = '';
+            }
+            delete data['duree_session_autre']; // Remove the auxiliary field
+
+            if (data['modes_auth'] && data['modes_auth'].includes('autre_mode_auth')) {
+                data['modes_auth'].splice(data['modes_auth'].indexOf('autre_mode_auth'), 1); // Remove the flag
+                if (data['modes_auth_autre_input']) {
+                    data['modes_auth'].push(`Autre: ${data['modes_auth_autre_input']}`);
+                }
+            }
+            delete data['modes_auth_autre_input'];
+
+
+            const deviseRadio = document.querySelector('input[name="devise"]:checked');
+            if (deviseRadio && deviseRadio.value === 'autre') {
+                data['devise'] = data['devise_autre'] || 'Non spécifié';
+            } else if (deviseRadio) {
+                data['devise'] = deviseRadio.value;
+            } else {
+                data['devise'] = '';
+            }
+            delete data['devise_autre'];
+
+            const supportMultilingueRadio = document.querySelector('input[name="support_multilingue"]:checked');
+            if (supportMultilingueRadio && supportMultilingueRadio.value === 'autre') {
+                data['support_multilingue'] = data['autres_langues'] || 'Non spécifié';
+            } else if (supportMultilingueRadio) {
+                data['support_multilingue'] = supportMultilingueRadio.value;
+            } else {
+                data['support_multilingue'] = '';
+            }
+            delete data['autres_langues'];
+
+            // Collect dynamic fields correctly
+            data['forfaits_wifi'] = [];
+            document.querySelectorAll('#forfait-group-container .forfait-item').forEach((item, index) => {
+                const nom = item.querySelector(`[name="forfait_nom_${index + 1}"]`).value;
+                const prix = item.querySelector(`[name="forfait_prix_${index + 1}"]`).value;
+                if (nom || prix) {
+                    data['forfaits_wifi'].push({ nom: nom, prix: prix });
+                }
+                delete data[`forfait_nom_${index + 1}`];
+                delete data[`forfait_prix_${index + 1}`];
+            });
+
+            data['pages_additionnelles'] = [];
+            document.querySelectorAll('#additional-pages-container input[type="text"]').forEach((input, index) => {
+                if (input.value.trim()) {
+                    data['pages_additionnelles'].push(input.value.trim());
+                }
+                delete data[`page_url_${index + 1}`];
+            });
+
+            data['services_produits'] = [];
+            document.querySelectorAll('#service-group-container .service-item').forEach((item, index) => {
+                const nom = item.querySelector(`[name="service_nom_${index + 1}"]`).value;
+                const desc = item.querySelector(`[name="service_desc_${index + 1}"]`).value;
+                if (nom || desc) {
+                    data['services_produits'].push({ nom: nom, description: desc });
+                }
+                delete data[`service_nom_${index + 1}`];
+                delete data[`service_desc_${index + 1}`];
+            });
+
+            data['liens_sociaux'] = {};
+            ['facebook', 'instagram', 'linkedin', 'tiktok', 'youtube'].forEach(platform => {
+                const input = document.querySelector(`[name="${platform}"]`);
+                if (input && input.value.trim()) {
+                    data['liens_sociaux'][platform] = input.value.trim();
+                }
+            });
+            delete data['facebook']; // Clean up individual entries
+            delete data['instagram'];
+            delete data['linkedin'];
+            delete data['tiktok'];
+            delete data['youtube'];
+
+            data['integrations_systemes'] = {};
+            const crm = document.querySelector('[name="crm_existant"]').value;
+            if (crm.trim()) data['integrations_systemes']['crm_existant'] = crm;
+            delete data['crm_existant'];
+
+            const email_marketing = document.querySelector('[name="outil_email_marketing"]').value;
+            if (email_marketing.trim()) data['integrations_systemes']['outil_email_marketing'] = email_marketing;
+            delete data['outil_email_marketing'];
+
+            document.querySelectorAll('#integration-group-container input[name^="autre_outil_"]').forEach((input, index) => {
+                if (input.value.trim()) {
+                    data['integrations_systemes'][`autre_outil_${index + 1}`] = input.value.trim();
+                }
+                delete data[`autre_outil_${index + 1}`];
+            });
+
+            return data;
+        }
+
+        function formatValue(value) {
+            if (Array.isArray(value)) {
+                return value.length > 0 ? `<ul>${value.map(item => `<li>${item}</li>`).join('')}</ul>` : '<span class="empty-field">Non spécifié</span>';
+            }
+            if (typeof value === 'object' && value !== null) {
+                const items = Object.entries(value).map(([key, val]) => {
+                    // Prettify keys for display
+                    let displayKey = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+                    if (displayKey.startsWith('Autre Outil ')) {
+                        displayKey = 'Autre outil ' + displayKey.split(' ')[2]; // Keep original numbering
+                    }
+
+                    if (val) return `<li>${displayKey}: ${val}</li>`;
+                    return '';
+                }).filter(item => item !== '');
+                return items.length > 0 ? `<ul>${items.join('')}</ul>` : '<span class="empty-field">Non spécifié</span>';
+            }
+            return value.trim() !== '' ? value : '<span class="empty-field">Non spécifié</span>';
+        }
+
+        function displayDataInModal(data) {
+            const modalBody = document.getElementById('modal-body-content');
+            modalBody.innerHTML = ''; // Clear previous content
+
+            // You can categorize and display data here
+            modalBody.innerHTML += `<h3>Informations Entreprise</h3>`;
+            modalBody.innerHTML += `<p><strong>Nom de l'entreprise:</strong> ${formatValue(data.nom_entreprise)}</p>`;
+            modalBody.innerHTML += `<p><strong>Logo (format souhaité):</strong> ${formatValue(data.logo_format)}</p>`;
+            modalBody.innerHTML += `<p><strong>Slogan:</strong> ${formatValue(data.slogan)}</p>`;
+            modalBody.innerHTML += `<p><strong>Site web:</strong> ${formatValue(data.site_web)}</p>`;
+            modalBody.innerHTML += `<p><strong>Couleurs de marque:</strong> ${formatValue(data.couleurs_marque)}</p>`;
+            modalBody.innerHTML += `<p><strong>Téléphone support:</strong> ${formatValue(data.telephone_support)}</p>`;
+            modalBody.innerHTML += `<p><strong>Email contact:</strong> ${formatValue(data.email_contact)}</p>`;
+            modalBody.innerHTML += `<p><strong>Adresse:</strong> ${formatValue(data.adresse)}</p>`;
+
+            modalBody.innerHTML += `<h3>Configuration WiFi & Accès</h3>`;
+            modalBody.innerHTML += `<p><strong>Durée de session:</strong> ${formatValue(data.duree_session)}</p>`;
+            modalBody.innerHTML += `<p><strong>Modes d'authentification:</strong> ${formatValue(data.modes_auth)}</p>`;
+            modalBody.innerHTML += `<p><strong>Bande passante:</strong> ${formatValue(data.bande_passante)}</p>`;
+            modalBody.innerHTML += `<p><strong>Horaires d'activation:</strong> ${formatValue(data.horaires_activation)}</p>`;
+            modalBody.innerHTML += `<p><strong>Message d'accueil:</strong> ${formatValue(data.message_accueil)}</p>`;
+            modalBody.innerHTML += `<p><strong>Nb max utilisateurs:</strong> ${formatValue(data.nb_max_utilisateurs)}</p>`;
+
+            modalBody.innerHTML += `<h3>Intégration Paiement Kkiapay</h3>`;
+            modalBody.innerHTML += `<p><strong>Clé publique Kkiapay:</strong> ${formatValue(data.cle_publique_kkiapay)}</p>`;
+            modalBody.innerHTML += `<p><strong>Clé privée Kkiapay:</strong> ${formatValue(data.cle_privee_kkiapay)}</p>`;
+            modalBody.innerHTML += `<p><strong>Clé secrète Kkiapay:</strong> ${formatValue(data.cle_secrete_kkiapay)}</p>`;
+            modalBody.innerHTML += `<p><strong>Identifiants compte Kkiapay:</strong> ${formatValue(data.kkiapay_identifiants_compte)}</p>`;
+            modalBody.innerHTML += `<p><strong>Devise:</strong> ${formatValue(data.devise)}</p>`;
+            modalBody.innerHTML += `<p><strong>Gestion échecs:</strong> ${formatValue(data.gestion_echecs)}</p>`;
+            modalBody.innerHTML += `<p><strong>Webhook URL:</strong> ${formatValue(data.webhook_url)}</p>`;
+            if (data.forfaits_wifi && data.forfaits_wifi.length > 0) {
+                modalBody.innerHTML += `<p><strong>Forfaits WiFi:</strong><ul>${data.forfaits_wifi.map(f => `<li>${formatValue(f.nom)}: ${formatValue(f.prix)} FCFA</li>`).join('')}</ul></p>`;
+            } else {
+                modalBody.innerHTML += `<p><strong>Forfaits WiFi:</strong> <span class="empty-field">Non spécifié</span></p>`;
+            }
+
+            modalBody.innerHTML += `<h3>Contenu & Présence Digitale</h3>`;
+            if (data.pages_additionnelles && data.pages_additionnelles.length > 0) {
+                modalBody.innerHTML += `<p><strong>Pages additionnelles:</strong><ul>${data.pages_additionnelles.map(p => `<li>${formatValue(p)}</li>`).join('')}</ul></p>`;
+            } else {
+                modalBody.innerHTML += `<p><strong>Pages additionnelles:</strong> <span class="empty-field">Non spécifié</span></p>`;
+            }
+            modalBody.innerHTML += `<p><strong>Contenu multimédia:</strong> ${formatValue(data.contenu_multimedia)}</p>`;
+            modalBody.innerHTML += `<p><strong>Liens sociaux:</strong> ${formatValue(data.liens_sociaux)}</p>`;
+            modalBody.innerHTML += `<p><strong>Flux à afficher:</strong> ${formatValue(data.flux_afficher)}</p>`;
+
+            modalBody.innerHTML += `<h3>Services & Offres Commerciales</h3>`;
+            if (data.services_produits && data.services_produits.length > 0) {
+                modalBody.innerHTML += `<p><strong>Services/Produits:</strong><ul>${data.services_produits.map(s => `<li>${formatValue(s.nom)}: ${formatValue(s.description)}</li>`).join('')}</ul></p>`;
+            } else {
+                modalBody.innerHTML += `<p><strong>Services/Produits:</strong> <span class="empty-field">Non spécifié</span></p>`;
+            }
+            modalBody.innerHTML += `<p><strong>Formulaires d'interaction:</strong> ${formatValue(data.formulaires_interaction)}</p>`;
+            modalBody.innerHTML += `<p><strong>Photos pro:</strong> ${formatValue(data.photos_pro)}</p>`;
+            modalBody.innerHTML += `<p><strong>Description activité:</strong> ${formatValue(data.description_activite)}</p>`;
+            modalBody.innerHTML += `<p><strong>Promotion spéciale:</strong> ${formatValue(data.promotion_speciale)}</p>`;
+
+            modalBody.innerHTML += `<h3>Configuration Technique & Analytics</h3>`;
+            modalBody.innerHTML += `<p><strong>Statistiques souhaitées:</strong> ${formatValue(data.statistiques)}</p>`;
+            modalBody.innerHTML += `<p><strong>Support multilingue:</strong> ${formatValue(data.support_multilingue)}</p>`;
+            modalBody.innerHTML += `<p><strong>Gestion des données:</strong> ${formatValue(data.gestion_donnees)}</p>`;
+            modalBody.innerHTML += `<p><strong>Niveau de support:</strong> ${formatValue(data.niveau_support)}</p>`;
+            modalBody.innerHTML += `<p><strong>Intégrations systèmes:</strong> ${formatValue(data.integrations_systemes)}</p>`;
+
+            modalBody.innerHTML += `<h3>Notes Additionnelles</h3>`;
+            modalBody.innerHTML += `<p><strong>Notes du client:</strong> ${formatValue(data.notes_additionnelles)}</p>`;
+        }
+
+
+        // --- Modal Event Listeners ---
+        const previewModal = document.getElementById('previewModal');
+        const previewBtn = document.getElementById('previewBtn');
+        const closeButton = document.querySelector('.close-button');
+        const editFormBtn = document.getElementById('editFormBtn');
+        const confirmSendBtn = document.getElementById('confirmSendBtn');
+        const submitFormBtn = document.getElementById('submitFormBtn'); // The original submit button
+
+        previewBtn.addEventListener('click', function() {
+            // First, validate the form (basic required fields check)
+            const form = document.getElementById('questionnaire-form');
+            if (!form.checkValidity()) {
+                // If form is not valid, trigger native browser validation messages
+                form.reportValidity();
+                alert('Veuillez remplir tous les champs obligatoires avant de prévisualiser.');
+                return;
+            }
+
+            const formData = getFormValues();
+            displayDataInModal(formData);
+            previewModal.style.display = 'block';
+        });
+
+        closeButton.addEventListener('click', function() {
+            previewModal.style.display = 'none';
+        });
+
+        editFormBtn.addEventListener('click', function() {
+            previewModal.style.display = 'none'; // Close the modal
+        });
+
+        confirmSendBtn.addEventListener('click', function() {
+            // This button will effectively submit the original form
+            document.getElementById('questionnaire-form').submit();
+        });
+
+        // Close modal if user clicks outside of it
+        window.addEventListener('click', function(event) {
+            if (event.target == previewModal) {
+                previewModal.style.display = 'none';
+            }
+        });
+
+
+        // --- Validation du formulaire (existante, mais now also triggered by preview) ---
+        document.getElementById('questionnaire-form').addEventListener('submit', function(e) {
+            // Native HTML5 validation will typically run first on submit.
+            // Our custom validation for 'required' fields is good, but checkValidity() is more comprehensive.
+            if (!this.checkValidity()) {
+                e.preventDefault(); // Stop form submission if not valid
+                alert('Veuillez corriger les erreurs dans le formulaire avant d\'envoyer.');
+            }
+        });
+
+
+        // --- Logique pour les champs conditionnels (radio "Autre") ---
+
+        // Fonction générique pour gérer les champs "Autre" pour les radios
+        function setupRadioOtherToggle(radioName, inputId) {
+            const radioButtons = document.querySelectorAll(`input[name="${radioName}"]`);
+            const otherInput = document.getElementById(inputId);
+
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'autre') {
+                        otherInput.style.display = 'inline-block';
+                        otherInput.required = true;
+                        otherInput.focus();
+                    } else {
+                        otherInput.style.display = 'none';
+                        otherInput.required = false;
+                        otherInput.value = ''; // Clear the input when "Other" is not selected
+                    }
+                });
+            });
+            // Initial check in case "Other" is pre-selected (e.g., on browser back)
+            const initiallyCheckedRadio = document.querySelector(`input[name="${radioName}"]:checked`);
+            if (initiallyCheckedRadio && initiallyCheckedRadio.value === 'autre') {
+                otherInput.style.display = 'inline-block';
+                otherInput.required = true;
+            }
+        }
+
+        setupRadioOtherToggle('duree_session', 'duree_session_autre_input');
+        setupRadioOtherToggle('devise', 'devise_autre_input');
+        setupRadioOtherToggle('support_multilingue', 'autres_langues_input');
+
+        // --- Logique pour les champs "Autre" pour les checkboxes ---
+        const autreModeAuthCheckbox = document.getElementById('autre_mode_auth_checkbox');
+        const modesAuthAutreInput = document.getElementById('modes_auth_autre_input');
+
+        autreModeAuthCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                modesAuthAutreInput.style.display = 'inline-block';
+                modesAuthAutreInput.focus();
+            } else {
+                modesAuthAutreInput.style.display = 'none';
+                modesAuthAutreInput.value = '';
+            }
+        });
+        // Initial check for 'autre_mode_auth_checkbox'
+        if (autreModeAuthCheckbox.checked) {
+            modesAuthAutreInput.style.display = 'inline-block';
+        }
+
+
+        // --- Logique pour les boutons "Ajouter un élément" ---
+
+        // Fonction générique pour ajouter des éléments (forfaits, services, pages)
+        function setupAddItemButton(buttonId, containerId, itemHtmlFn) {
+            let count = document.getElementById(containerId).children.length; // Start count from existing items
+            document.getElementById(buttonId).addEventListener('click', function() {
+                count++;
+                const container = document.getElementById(containerId);
+                const newItem = document.createElement('div');
+                // For forfait/service, add a class; for pages, it's just an input
+                if (buttonId === 'addForfaitBtn' || buttonId === 'addServiceBtn') {
+                    newItem.classList.add(buttonId === 'addForfaitBtn' ? 'forfait-item' : 'service-item');
+                }
+                newItem.innerHTML = itemHtmlFn(count);
+                container.appendChild(newItem);
+            });
+        }
+
+        // HTML pour un nouveau forfait
+        const forfaitItemHtml = (count) => `
+            <label>${count}. Nom :</label>
+            <input type="text" name="forfait_nom_${count}">
+            <label>Prix :</label>
+            <input type="number" name="forfait_prix_${count}"> FCFA
+        `;
+        setupAddItemButton('addForfaitBtn', 'forfait-group-container', forfaitItemHtml);
+
+        // HTML pour une nouvelle page
+        const pageItemHtml = (count) => `
+            <input type="text" name="page_url_${count}" placeholder="${count}. Nom de la page ou URL">
+        `;
+        setupAddItemButton('addPageBtn', 'additional-pages-container', pageItemHtml);
+
+        // HTML pour un nouveau service
+        const serviceItemHtml = (count) => `
+            <label>${count}. Nom :</label>
+            <input type="text" name="service_nom_${count}">
+            <label>Description :</label>
+            <textarea name="service_desc_${count}" rows="2"></textarea>
+        `;
+        setupAddItemButton('addServiceBtn', 'service-group-container', serviceItemHtml);
+
+        // HTML pour une nouvelle intégration (spécifique car pas un "item" groupé)
+        let integrationCount = 1; // Start from 1 because 'autre_outil_1' already exists
+        document.getElementById('addIntegrationBtn').addEventListener('click', function() {
+            integrationCount++;
+            const container = document.getElementById('integration-group-container');
+            const newItemDiv = document.createElement('div'); // Wrap label and input in a div for layout
+            newItemDiv.innerHTML = `
+                <label>Autre outil ${integrationCount} :</label>
+                <input type="text" name="autre_outil_${integrationCount}">
+            `;
+            container.appendChild(newItemDiv);
+        });
+
+    </script>
+</body>
+</html>

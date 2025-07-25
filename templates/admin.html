@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration des Questionnaires</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .admin-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .submission-item {
+            border: 1px solid #eee;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Permet le retour à la ligne sur petits écrans */
+        }
+        .submission-info {
+            flex-grow: 1;
+            margin-right: 20px; /* Espace avant les boutons */
+        }
+        .submission-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .submission-actions {
+            display: flex;
+            gap: 10px; /* Espace entre les boutons */
+        }
+        .submission-actions a, .submission-actions button {
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            white-space: nowrap; /* Empêche le texte du bouton de se casser */
+        }
+        .submission-actions .view-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        .submission-actions .view-btn:hover {
+            background-color: #0056b3;
+        }
+        .submission-actions .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+        .submission-actions .delete-btn:hover {
+            background-color: #c82333;
+        }
+        .no-submissions {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Gestion des Soumissions de Questionnaires</h1>
+
+        {% if request.args.get('message') %}
+            <div class="message success">{{ request.args.get('message') }}</div>
+        {% endif %}
+        {% if request.args.get('error') %}
+            <div class="message error">{{ request.args.get('error') }}</div>
+        {% endif %}
+
+        {% if files %}
+            {% for file in files %}
+            <div class="submission-item">
+                <div class="submission-info">
+                    <p><strong>Entreprise:</strong> {{ file.nom_entreprise }}</p>
+                    <p><strong>Email:</strong> {{ file.email_contact }}</p>
+                    <p><strong>Date:</strong> {{ file.date_soumission }}</p>
+                    <p><small>Fichier: {{ file.filename }}</small></p>
+                </div>
+                <div class="submission-actions">
+                    <a href="{{ url_for('view_submission', filename=file.filename) }}" class="view-btn">Voir Détails</a>
+                    <form action="{{ url_for('delete_submission', filename=file.filename) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette soumission ?');">
+                        <button type="submit" class="delete-btn">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="no-submissions">
+                <p>Aucune soumission de questionnaire trouvée pour le moment.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
