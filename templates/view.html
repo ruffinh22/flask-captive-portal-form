@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails du Questionnaire - {{ data.nom_entreprise }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .view-container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        p strong {
+            color: #555;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 5px;
+        }
+        .back-btn {
+            display: inline-block;
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 30px;
+            transition: background-color 0.3s ease;
+        }
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap; /* Permet le retour à la ligne */
+            word-wrap: break-word; /* Casse les longs mots */
+            max-height: 400px; /* Limite la hauteur */
+            overflow-y: auto; /* Ajoute un scroll si le contenu est trop long */
+        }
+    </style>
+</head>
+<body>
+    <div class="view-container">
+        <h1>Détails du Questionnaire pour {{ data.nom_entreprise | default('Entreprise Inconnue') }}</h1>
+        <p><strong>Fichier:</strong> {{ filename }}</p>
+        <p><strong>Date de Soumission:</strong> {{ data.date_soumission | default('N/A') }}</p>
+        <p><strong>Adresse IP:</strong> {{ data.ip_address | default('N/A') }}</p>
+
+        ---
+
+        <h2>Informations Entreprise</h2>
+        <p><strong>Nom de l'entreprise:</strong> {{ data.nom_entreprise | default('N/A') }}</p>
+        <p><strong>Logo (format souhaité):</strong> {{ data.logo_format | default('N/A') }}</p>
+        <p><strong>Slogan ou message d'accueil:</strong> {{ data.slogan | default('N/A') }}</p>
+        <p><strong>Site web:</strong> <a href="{{ data.site_web }}" target="_blank">{{ data.site_web | default('N/A') }}</a></p>
+        <p><strong>Couleurs de marque (codes HEX):</strong> {{ data.couleurs_marque | default('N/A') }}</p>
+        <p><strong>Téléphone support client:</strong> {{ data.telephone_support | default('N/A') }}</p>
+        <p><strong>Email de contact:</strong> {{ data.email_contact | default('N/A') }}</p>
+        <p><strong>Adresse complète:</strong> {{ data.adresse | default('N/A') }}</p>
+
+        ---
+
+        <h2>Configuration WiFi & Accès</h2>
+        <p><strong>Durée de session par défaut:</strong> {{ data.duree_session | default('N/A') }} {% if data.duree_session == 'autre' and data.duree_session_autre %}({{ data.duree_session_autre }}){% endif %}</p>
+        <p><strong>Modes d'authentification:</strong>
+            {% if data.modes_auth %}
+                <ul>
+                {% for mode in data.modes_auth %}
+                    <li>{{ mode }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+            {% if data.modes_auth_autre %}<p><strong>Autre mode d'authentification:</strong> {{ data.modes_auth_autre }}</p>{% endif %}
+        </p>
+        <p><strong>Bande passante par utilisateur:</strong> {{ data.bande_passante | default('N/A') }}</p>
+        <p><strong>Horaires d'activation:</strong> {{ data.horaires_activation | default('N/A') }}</p>
+        <p><strong>Message d'accueil personnalisé:</strong> {{ data.message_accueil | default('N/A') }}</p>
+        <p><strong>Nb max d'utilisateurs simultanés:</strong> {{ data.nb_max_utilisateurs | default('N/A') }}</p>
+
+        ---
+
+        <h2>Intégration Paiement Kkiapay</h2>
+        <p><strong>Clé publique Kkiapay:</strong> {{ data.cle_publique_kkiapay | default('N/A') }}</p>
+        <p><strong>Devise utilisée:</strong> {{ data.devise | default('N/A') }} {% if data.devise == 'autre' and data.devise_autre %}({{ data.devise_autre }}){% endif %}</p>
+        <p><strong>Gestion des échecs de paiement:</strong>
+            {% if data.gestion_echecs %}
+                <ul>
+                {% for item in data.gestion_echecs %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>URL de Webhook:</strong> <a href="{{ data.webhook_url }}" target="_blank">{{ data.webhook_url | default('N/A') }}</a></p>
+        <p><strong>Forfaits WiFi payants proposés:</strong>
+            {% if data.forfaits_wifi %}
+                <ul>
+                {% for forfait in data.forfaits_wifi %}
+                    <li>{{ forfait.nom | default('N/A') }} : {{ forfait.prix | default('N/A') }} FCFA</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+
+        ---
+
+        <h2>Contenu & Présence Digitale</h2>
+        <p><strong>Pages additionnelles:</strong>
+            {% if data.pages_additionnelles %}
+                <ul>
+                {% for page in data.pages_additionnelles %}
+                    <li>{{ page }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Contenu multimédia:</strong>
+            {% if data.contenu_multimedia %}
+                <ul>
+                {% for item in data.contenu_multimedia %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Liens réseaux sociaux:</strong>
+            {% if data.liens_sociaux %}
+                <ul>
+                {% for platform, url in data.liens_sociaux.items() %}
+                    <li>{{ platform | capitalize }}: <a href="{{ url }}" target="_blank">{{ url }}</a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Flux à afficher:</strong>
+            {% if data.flux_afficher %}
+                <ul>
+                {% for item in data.flux_afficher %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+
+        ---
+
+        <h2>Services & Offres Commerciales</h2>
+        <p><strong>Principaux services/produits:</strong>
+            {% if data.services_produits %}
+                <ul>
+                {% for service in data.services_produits %}
+                    <li><strong>{{ service.nom | default('N/A') }}</strong>: {{ service.description | default('N/A') }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Formulaires d'interaction:</strong>
+            {% if data.formulaires_interaction %}
+                <ul>
+                {% for item in data.formulaires_interaction %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Photos professionnelles:</strong> {{ data.photos_pro | default('N/A') }}</p>
+        <p><strong>Description de votre activité:</strong> {{ data.description_activite | default('N/A') }}</p>
+        <p><strong>Promotion spéciale:</strong> {{ data.promotion_speciale | default('N/A') }}</p>
+
+        ---
+
+        <h2>Configuration Technique & Analytics</h2>
+        <p><strong>Statistiques souhaitées:</strong>
+            {% if data.statistiques %}
+                <ul>
+                {% for item in data.statistiques %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Support multilingue:</strong> {{ data.support_multilingue | default('N/A') }} {% if data.support_multilingue == 'autre' and data.autres_langues %}({{ data.autres_langues }}){% endif %}</p>
+        <p><strong>Gestion des données:</strong>
+            {% if data.gestion_donnees %}
+                <ul>
+                {% for item in data.gestion_donnees %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Niveau de support:</strong> {{ data.niveau_support | default('N/A') }}</p>
+        <p><strong>Intégrations avec autres systèmes:</strong>
+            {% if data.integrations_systemes %}
+                <ul>
+                {% for key, value in data.integrations_systemes.items() %}
+                    <li>{{ key | replace('_', ' ') | capitalize }}: {{ value }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+
+        <a href="{{ url_for('admin') }}" class="back-btn">Retour à l'administration</a>
+    </div>
+</body>
+</html>
